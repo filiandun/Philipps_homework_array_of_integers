@@ -1,6 +1,6 @@
 #include "array.h"
 
-Array::Array() 
+Array::Array()
 {
 	this->array_of_integers = new int[this->array_length + 1];
 }
@@ -9,12 +9,15 @@ Array::Array(int* array_of_integers, unsigned long long int array_length)
 {
 	this->array_length = array_length;
 	this->array_of_integers = new int[this->array_length + 1];
+
 	for (unsigned long long int i = 0; i < this->array_length; ++i)
 	{
 		this->array_of_integers[i] = array_of_integers[i];
 	}
 	this->array_of_integers[this->array_length] = '\0'; // последний элемент в массиве обозначаю так, иначе могут быть ошибки
 }
+
+
 
 Array::Array(const Array& a)
 {
@@ -26,10 +29,13 @@ Array::Array(const Array& a)
 	}
 }
 
+
+
 Array::~Array()
 {
 	delete[] this->array_of_integers;
 }
+
 
 
 bool Array::comparing_an_integer_with_array(int integer) const // функция для проверки, есть ли в массиве элемент, который мы хотим к нему добавить
@@ -46,6 +52,9 @@ bool Array::comparing_an_integer_with_array(int integer) const // функция для пр
 
 
 
+/**************ДОБАВЛЕНИЕ*ЭЛЕМЕНТА*ВО*МНОЖЕСТВО***************/
+
+// ПЕРЕГРУЗКА ОПЕРАТОРА+
 Array Array::operator+(int integer)
 {
 	if (comparing_an_integer_with_array(integer) == false) // проверка, есть ли в массиве элемент, который нужно к нему добавить (нужно, чтобы его не было, иначе будут повторяющиеся элементы)
@@ -60,12 +69,13 @@ Array Array::operator+(int integer)
 			addition.array_of_integers[i] = this->array_of_integers[i];
 		}
 		addition.array_of_integers[addition.array_length - 1] = integer; // добавление нового элемемента в конец нового массива
-		
+
 		return addition;
 	}
-	return Array (this->array_of_integers, this->array_length);
+	return *this;
 }
 
+// ПЕРЕГРУЗКА ОПЕРАТОРА+=
 Array Array::operator+=(int integer)
 {
 	if (comparing_an_integer_with_array(integer) == false) // проверка, есть ли в массиве элемент, который нужно к нему добавить (нужно, чтобы его не было, иначе будут повторяющиеся элементы)
@@ -86,12 +96,14 @@ Array Array::operator+=(int integer)
 	return *this;
 }
 
-///
-/// 
-/// 
-/// 
+/*************************************************************/
 
-// ОБЪЕДИНЕНИЕ МНОЖЕСТВ
+///////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////
+
+/********************ОБЪЕДИНЕНИЕ*МНОЖЕСТВ*********************/
+
+// ПЕРЕГРУЗКА ОПЕРАТОРА+
 Array Array::operator+(Array a) const
 {
 	a /= *this; // использование перегрузки оператора /= для того, чтобы найти символы, которые есть во втором массиве, но нет в первом
@@ -106,6 +118,7 @@ Array Array::operator+(Array a) const
 	return unification;
 }
 
+// ПЕРЕГРУЗКА ОПЕРАТОРА+=
 Array Array::operator+=(Array a)
 {
 	a /= *this; // использование перегрузки оператора /= для того, чтобы найти символы, которые есть во втором массиве, но нет в первом
@@ -129,12 +142,15 @@ Array Array::operator+=(Array a)
 	return *this;
 }
 
-///
-/// 
-/// 
-/// 
+/*************************************************************/
 
-Array Array::operator-(int integer)
+///////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////
+
+/***************УДАЛЕНИЕ*ЭЛЕМЕНТА*ИЗ*МНОЖЕСТВА****************/
+
+// ПЕРЕГРУЗКА ОПЕРАТОРА-
+Array Array::operator-(int integer) const
 {
 	if (comparing_an_integer_with_array(integer) == true) // проверка, есть ли в массиве элемент, который нужно убрать (нужно, чтобы он был, иначе что удалять?)
 	{
@@ -157,7 +173,7 @@ Array Array::operator-(int integer)
 	return Array(this->array_of_integers, this->array_length);
 }
 
-
+// ПЕРЕГРУЗКА ОПЕРАТОРА-=
 Array Array::operator-=(int integer)
 {
 	if (comparing_an_integer_with_array(integer) == true) // проверка, есть ли в массиве элемент, который нужно к нему добавить (нужно, чтобы он был, иначе что удалять?)
@@ -181,15 +197,18 @@ Array Array::operator-=(int integer)
 	return *this;
 }
 
-///
-/// 
-/// 
-/// 
+/*************************************************************/
 
-Array Array::operator/(Array& a) const
+///////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////// 
+
+/**********************РАЗНОСТЬ*МНОЖЕСТВ**********************/
+
+// ПЕРЕГРУЗКА ОПЕРАТОРА/
+Array Array::operator/(const Array& a) const
 {
 	Array difference;
-	difference.array_length = 0; 
+	difference.array_length = 0;
 	unsigned long long int n = 0;
 	for (unsigned long long int i = 0; i < this->array_length; ++i) // тут расчитывается будущий размер массива
 	{
@@ -229,8 +248,8 @@ Array Array::operator/(Array& a) const
 	return difference;
 }
 
-
-Array& Array::operator/=(Array a)
+// ПЕРЕГРУЗКА ОПЕРАТОРА/=
+Array Array::operator/=(const Array& a)
 {
 	Array temp(this->array_of_integers, this->array_length); // копирование текущего массива во временный
 
@@ -277,11 +296,14 @@ Array& Array::operator/=(Array a)
 	return *this;
 }
 
-///
-/// 
-/// 
-/// 
+/*************************************************************/
 
+///////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////
+
+/********************ПЕРЕСЕЧЕНИЕ*МНОЖЕСТВ*********************/
+
+// ПЕРЕГРУЗКА ОПЕРАТОРА*
 Array Array::operator*(Array& a) const
 {
 	Array intersection;
@@ -297,9 +319,9 @@ Array Array::operator*(Array& a) const
 		}
 	}
 
-	intersection.array_of_integers = new int[intersection.array_length + 1]; 
+	intersection.array_of_integers = new int[intersection.array_length + 1];
 
-	int l = 0; 
+	int l = 0;
 	for (unsigned long long int i = 0; i < this->array_length; ++i) // тут числа добавляются в новый массив пересечений
 	{
 		for (unsigned long long int j = 0; j < a.array_length; ++j)
@@ -314,7 +336,7 @@ Array Array::operator*(Array& a) const
 	return intersection;
 }
 
-
+// ПЕРЕГРУЗКА ОПЕРАТОРА*=
 Array Array::operator*=(Array& a)
 {
 	Array temp(this->array_of_integers, this->array_length); // копирование текущего массива во временный
@@ -349,12 +371,14 @@ Array Array::operator*=(Array& a)
 	}
 	return *this;
 }
+/*************************************************************/
 
-///
-/// 
-/// 
-/// 
+///////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////
 
+/************************ПРИСВАИВАНИЕ*************************/
+
+// ПЕРЕГРУЗКА ОПЕРАТОРА=
 Array Array::operator=(const Array& a)
 {
 	this->array_length = a.array_length;
@@ -368,11 +392,14 @@ Array Array::operator=(const Array& a)
 	return *this;
 }
 
-///
-/// 
-/// 
-///
+/*************************************************************/
 
+///////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////
+
+/********************СРАВНЕНИЕ*МНОЖЕСТВ***********************/
+
+// ПЕРЕГРУЗКА ОПЕРАТОРА==
 bool Array::operator==(Array a) const
 {
 	if (this->array_length == a.array_length)
@@ -387,13 +414,15 @@ bool Array::operator==(Array a) const
 	return false;
 }
 
-///
-/// 
-/// 
-///
+/*************************************************************/
 
-// ПЕРЕГРУЗКА << И >> (РАБОТАЕТ БЕЗ НАРЕКАНИЙ)
-ostream& operator<< (ostream& output, const Array& a)
+///////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////
+
+/***********************ВЫВОД*МНОЖЕСТВА***********************/
+
+// ПЕРЕГРУЗКА ОПЕРАТОРОВ << И >>
+std::ostream& operator<< (std::ostream& output, const Array& a)
 {
 	for (unsigned long long int i = 0; i < a.array_length; i++)
 	{
@@ -402,20 +431,34 @@ ostream& operator<< (ostream& output, const Array& a)
 	return output;
 }
 
-istream& operator>> (istream& input, Array& a)
+std::istream& operator>> (std::istream& input, Array& a)
 {
 	std::cout << "Введите размер будущего массива: ";
 	std::cin >> a.array_length;
 
 	delete[]a.array_of_integers;
-	a.array_of_integers = new int [a.array_length + 1];
+	a.array_of_integers = new int[a.array_length + 1];
 
-	for (unsigned long long int i = 0; i < a.array_length; ++i)
+	unsigned long long int temp = 0; // для проверки, есть ли уже введённое число в массиве
+	for (unsigned long long int i = 0; i < a.array_length;)
 	{
 		std::cout << "Введите число массива под номером " << i + 1 << ": ";
-		input >> a.array_of_integers[i];
+		input >> temp;
+
+		if (a.comparing_an_integer_with_array(temp) == false) // для проверки, есть ли уже введённое число в массиве
+		{
+			a.array_of_integers[i] = temp;
+			++i;
+		}
 	}
-	a.array_of_integers[a.array_length] = '\0';
+	a.array_of_integers[a.array_length] = '\0'; // последний элемент
 
 	return input;
 }
+
+/*************************************************************/
+
+///////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////
+
+/*************************************************************/

@@ -1,13 +1,11 @@
 #pragma once
 #include <iostream>
 
-using namespace std;
-
 class Array
 {
 public:
 	Array();
-	Array(int* array_of_integers, unsigned long long int array_length);
+	explicit Array(int* array_of_integers, unsigned long long int array_length);
 	Array(const Array& a);
 
 	~Array();
@@ -20,42 +18,32 @@ public:
 	bool comparing_an_integer_with_array(int integer) const; // ôóíêöèÿ äëÿ ïğîâåğêè, åñòü ëè â ìàññèâå ıëåìåíò, êîòîğûé ìû õîòèì ê íåìó äîáàâèòü
 
 	// ÄÎÁÀÂËÅÍÈÅ İËÅÌÅÍÒÀ Â ÌÍÎÆÅÑÒÂÎ
-	Array operator+(int integer); // ğàáîòàåò õîğîøî
-	Array operator+=(int integer); // ğàáîòàåò õîğîøî
+	Array operator+(int integer);
+	Array operator+=(int integer);
 
 	// ÎÁÚÅÄÈÍÅÍÈÅ ÌÍÎÆÅÑÒÂ
-	Array operator+(Array a) const; // ğàáîòàåò õîğîøî
-	Array operator+=(Array a); // ğàáîòàåò õîğîøî
+	Array operator+(Array a) const;
+	Array operator+=(Array a);
 
 	// ÓÄÀËÅÍÈÅ İËÅÌÅÍÒÀ ÈÇ ÌÍÎÆÅÑÒÂÀ
-	Array operator-(int integer); // ğàáîòàåò õîğîøî
-	Array operator-=(int integer); // ğàáîòàåò õîğîøî
+	Array operator-(int integer) const;
+	Array operator-=(int integer);
 
 	// ĞÀÇÍÎÑÒÜ ÌÍÎÆÅÑÒÂ
-	Array operator/(Array& a) const; // ğàáîòàåò õîğîøî
-	Array& operator/=(const Array a); // ğàáîòàåò õîğîøî
+	Array operator/(const Array& a) const;
+	Array operator/=(const Array& a);
 
 	// ÏÅĞÅÑÅ×ÅÍÈÅ ÌÍÎÆÅÑÒÂ
-	Array operator*(Array& a) const; // ğàáîòàåò õîğîøî
-	Array operator*=(Array& a); // ğàáîòàåò õîğîøî
+	Array operator*(Array& a) const;
+	Array operator*=(Array& a);
 
 	// ÏĞÈÑÂÀÈÂÀÍÈÅ
-	Array operator=(const Array& a); // ğàáîòàåò õîğîøî
+	Array operator=(const Array& a);
 
 	// ÑĞÀÂÍÅÍÈÅ ÌÍÎÆÅÑÒÂ
-	bool operator==(Array a) const; // ğàáîòàåò õîğîøî
+	bool operator==(Array a) const;
 
-	// ÂÛÂÎÄ È ÂÂÎÄ ÌÍÎÆÅÑÒÂ (ĞÀÁÎÒÀÅÒ ×ÀÑÒÈ×ÍÎ)
-	friend ostream& operator<<(ostream& output, const Array& a);
-	friend istream& operator>>(istream& input, Array& a);
+	// ÂÛÂÎÄ È ÂÂÎÄ ÌÍÎÆÅÑÒÂ
+	friend std::ostream& operator<<(std::ostream& output, const Array& a);
+	friend std::istream& operator>>(std::istream& input, Array& a);
 };
-/*
-
-1. ÂÎ ÂÑÅÕ FOR ÇÀÌÅÍÈÒÜ int i, j ÍÀ unsigned long long int i, j - ÑÄÅËÀÍÎ
-2. ÏÎÄÎÁÀÂËßÒÜ CONST Ê ÎÏÅĞÀÒÎĞÀÌ/ÔÓÍÊÖÈßÌ 
-3. ÏÎÈÃĞÀÒÜÑß Ñ * È &
-4. ÎÁËÀÃÎĞÎÄÈÒÜ main.cpp
-5. ÏÅĞÅÏÈÑÀÒÜ operator== è operator= - ÑÄÅËÀÍÎ
-6. ÄÎÄÅËÀÒÜ operator>>, ÒÀÊ ÊÀÊ ÏÎÂÒÎĞßŞÙÈÅÑß ÇÍÀ×ÅÍÈß ÌÎÆÅÒ ÏĞÈÍßÒÜ
-
-*/
